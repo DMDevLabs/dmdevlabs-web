@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMDev Labs - En construcción</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* Reseteo básico y fondo */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #050914;
+            /* Azul muy oscuro casi negro */
+            /* Cuadrícula esquemática futurista */
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.15) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+            font-family: 'Share Tech Mono', monospace;
+            color: #00ffff;
+            /* Cian / Neón */
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Efecto de viñeta para oscurecer los bordes de la pantalla */
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, transparent 40%, #050914 100%);
+            pointer-events: none;
+        }
+
+        /* Contenedor central */
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            /* Para que quede sobre la viñeta */
+            padding: 2rem 4rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            background: rgba(5, 9, 20, 0.7);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        /* Esquinas de estilo tecnológico para el contenedor */
+        .container::before,
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ffff;
+            box-sizing: border-box;
+        }
+
+        /* Esquina superior izquierda */
+        .container::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        /* Esquina inferior derecha */
+        .container::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Texto principal */
+        h1 {
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
+            animation: pulse 2s infinite alternate;
+        }
+
+        /* Animación de latido/pulso sutil para el brillo */
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
+            }
+
+            100% {
+                text-shadow: 0 0 15px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.6);
+            }
+        }
+
+        /* Ajuste para pantallas móviles */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 1.5rem 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>En construcción</h1>
+    </div>
+</body>
+
+</html>
