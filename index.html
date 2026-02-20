@@ -1,124 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DMDev Labs - En construcción</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>Sistema en Construcción</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&display=swap" rel="stylesheet">
     <style>
-        /* Reseteo básico y fondo */
-        body {
+        :root {
+            --bg-color: #020410; /* Fondo casi negro azulado */
+            --primary-cyan: #00f3ff; /* Cian eléctrico principal */
+            --secondary-purple: #bd00ff; /* Púrpura para profundidad */
+            --glow-strength: 0px 0px 20px;
+        }
+
+        body, html {
+            height: 100%;
             margin: 0;
-            padding: 0;
-            height: 100vh;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #050914;
-            /* Azul muy oscuro casi negro */
-            /* Cuadrícula esquemática futurista */
-            background-image:
-                linear-gradient(rgba(0, 255, 255, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.15) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center center;
-            font-family: 'Share Tech Mono', monospace;
-            color: #00ffff;
-            /* Cian / Neón */
-            overflow: hidden;
-            position: relative;
+            color: var(--primary-cyan);
         }
 
-        /* Efecto de viñeta para oscurecer los bordes de la pantalla */
-        body::after {
-            content: '';
+        /* --- CAPAS DE FONDO (BACKGROUND LAYERS) --- */
+        
+        /* Capa 1: Ruido de fondo sutil y viñeta */
+        .bg-layer-1 {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, transparent 40%, #050914 100%);
-            pointer-events: none;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-color) 90%);
+            z-index: -3;
+            opacity: 0.8;
         }
 
-        /* Contenedor central */
-        .container {
+        /* Capa 2: Cuadrícula de perspectiva (Perspective Grid) */
+        .bg-grid-perspective {
+            position: absolute;
+            width: 200%; /* Más ancho para la perspectiva */
+            height: 100%;
+            bottom: -50%; /* Empezar desde abajo */
+            left: -50%;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg); /* Inclinación 3D */
+            animation: grid-move 10s linear infinite; /* Movimiento continuo */
+            z-index: -2;
+        }
+
+        /* --- CONTENEDOR CENTRAL (HOLOGRAPHIC HUD) --- */
+        .holo-container {
+            position: relative;
             text-align: center;
-            position: relative;
-            z-index: 1;
-            /* Para que quede sobre la viñeta */
-            padding: 2rem 4rem;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            background: rgba(5, 9, 20, 0.7);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.1);
+            padding: 3rem;
+            z-index: 10;
         }
 
-        /* Esquinas de estilo tecnológico para el contenedor */
-        .container::before,
-        .container::after {
+        /* El círculo central brillante */
+        .core-reactor {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.1) 0%, transparent 70%);
+            box-shadow: 
+                0 0 60px rgba(0, 243, 255, 0.2),
+                inset 0 0 40px rgba(189, 0, 255, 0.2);
+            z-index: -1;
+        }
+
+        /* Anillos giratorios externos (pseudo-elementos) */
+        .holo-container::before, .holo-container::after {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #00ffff;
-            box-sizing: border-box;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px solid transparent;
+            z-index: -1;
         }
 
-        /* Esquina superior izquierda */
-        .container::before {
-            top: -2px;
-            left: -2px;
-            border-right: none;
-            border-bottom: none;
+        /* Anillo exterior lento */
+        .holo-container::before {
+            width: 380px; height: 380px;
+            border-top-color: var(--primary-cyan);
+            border-bottom-color: var(--secondary-purple);
+            opacity: 0.5;
+            animation: spin-cw 20s linear infinite;
         }
 
-        /* Esquina inferior derecha */
-        .container::after {
-            bottom: -2px;
-            right: -2px;
-            border-left: none;
-            border-top: none;
+        /* Anillo interior rápido y discontinuo */
+        .holo-container::after {
+            width: 340px; height: 340px;
+            border: 2px dashed var(--primary-cyan);
+            opacity: 0.3;
+            animation: spin-ccw 12s linear infinite;
         }
 
-        /* Texto principal */
+        /* --- TIPOGRAFÍA Y EFECTOS DE TEXTO --- */
         h1 {
-            font-size: 3.5rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 0.2em;
             margin: 0;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
-            animation: pulse 2s infinite alternate;
+            text-transform: uppercase;
+            /* Efecto de brillo multicapa (Neon Glow) */
+            text-shadow: 
+                0 0 5px var(--primary-cyan),
+                0 0 20px rgba(0, 243, 255, 0.8),
+                0 0 50px rgba(189, 0, 255, 0.5);
+            animation: text-flicker 4s infinite alternate;
+            position: relative;
         }
 
-        /* Animación de latido/pulso sutil para el brillo */
-        @keyframes pulse {
-            0% {
-                text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
-            }
-
-            100% {
-                text-shadow: 0 0 15px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.6);
-            }
+        /* Línea de escaneo sobre el texto */
+        h1::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: rgba(0, 243, 255, 0.7);
+            box-shadow: 0 0 10px var(--primary-cyan);
+            opacity: 0.6;
+            animation: scanline-move 3s ease-in-out infinite;
         }
 
-        /* Ajuste para pantallas móviles */
+        .subtitle {
+            display: block;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+            color: var(--primary-cyan);
+        }
+
+        /* Pequeños detalles "decorativos" de la UI */
+        .system-status {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: rgba(0, 243, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .system-status span::before {
+             content: '■ '; color: var(--secondary-purple);
+        }
+
+        /* --- ANIMACIONES (KEYFRAMES) --- */
+        
+        /* Rotación sentido horario */
+        @keyframes spin-cw {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        /* Rotación sentido anti-horario */
+        @keyframes spin-ccw {
+            from { transform: translate(-50%, -50%) rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+        /* Movimiento de la cuadrícula de suelo */
+        @keyframes grid-move {
+            from { background-position: 0 0; }
+            to { background-position: 0 50px; }
+        }
+        /* Parpadeo sutil del texto */
+        @keyframes text-flicker {
+            0%, 100% { opacity: 1; }
+            95% { opacity: 1; }
+            96% { opacity: 0.8; text-shadow: none; }
+            97% { opacity: 1; }
+            98% { opacity: 0.9; }
+            99% { opacity: 1; }
+        }
+        /* Línea de escaneo horizontal */
+        @keyframes scanline-move {
+            0% { top: -10%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+
+        /* --- RESPONSIVE --- */
         @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            .container {
-                padding: 1.5rem 2rem;
-            }
+            h1 { font-size: 1.8rem; }
+            .holo-container::before { width: 280px; height: 280px; }
+            .holo-container::after { width: 250px; height: 250px; }
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>En construcción</h1>
-    </div>
-</body>
+    <div class="bg-grid-perspective"></div>
+    <div class="bg-layer-1"></div>
 
+    <main class="holo-container">
+        <div class="core-reactor"></div>
+        
+        <h1>Página en Construcción</h1>
+        <span class="subtitle">> INITIALIZING CORE SYSTEMS...</span>
+
+        <div class="system-status">
+            <span>STATUS: DEPLOYING</span>
+            <span>MODULE: UI/UX v2.0</span>
+        </div>
+    </main>
+</body>
 </html>
