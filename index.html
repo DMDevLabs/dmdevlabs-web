@@ -146,6 +146,7 @@
             border-radius: 4px;
             transition: all 0.3s ease;
             background: rgba(88, 166, 255, 0.05);
+            cursor: pointer; /* Agregado para forzar el cursor de enlace */
         }
 
         .action-links a:hover {
@@ -213,15 +214,15 @@
         <h1>DMDev Labs</h1>
         
         <div class="terminal-text">
-            <span>> Inicializando entorno de React... <span class="success">[OK]</span></span>
-            <span>> Obteniendo módulos de VaxSafe... <span class="success">[OK]</span></span>
-            <span>> Configurando mapa DNS para dmdevlabs.com... <span class="success">[OK]</span></span>
+            <span>> Inicializando entorno... <span class="success">[OK]</span></span>
+            <span>> Obteniendo módulos... <span class="success">[OK]</span></span>
+            <span>> Configurando mapa DNS... <span class="success">[OK]</span></span>
             <span>> Compilando index para producción... <span class="warning">[EN PROGRESO]</span><span class="cursor"></span></span>
         </div>
 
         <div class="action-links">
-            <a href="https://github.com/" target="_blank">Ver en GitHub</a>
-            <a href="mailto:tu-correo@dmdevlabs.com">Contacto</a>
+            <a href="#" onclick="alert('¡Próximamente!'); return false;">Ver en GitHub</a>
+            <a href="mailto:contacto@dmdevlabs.com">Contacto</a>
         </div>
     </main>
 
