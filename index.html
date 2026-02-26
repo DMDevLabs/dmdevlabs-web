@@ -17,7 +17,7 @@
         *, *::before, *::after { box-sizing: border-box; }
 
         body, html {
-            min-height: 100dvh; 
+            height: 100%; 
             margin: 0;
             overflow: hidden;
             font-family: 'Fira Code', monospace;
@@ -27,6 +27,7 @@
             align-items: center;
             color: var(--primary-cyan);
             position: relative;
+            touch-action: none; /* Evita que la pantalla haga scroll al jugar en móvil */
         }
 
         /* --- CAPA DE CÓDIGO DE FONDO --- */
@@ -59,7 +60,7 @@
         .ui-container {
             position: relative;
             text-align: center;
-            padding: clamp(2rem, 5vw, 4rem);
+            padding: clamp(1.5rem, 5vw, 4rem);
             width: 90%;
             max-width: 650px;
             z-index: 10;
@@ -101,7 +102,7 @@
         }
 
         h1 {
-            font-size: clamp(2rem, 5vw + 1rem, 3.2rem);
+            font-size: clamp(1.8rem, 5vw + 1rem, 3.2rem);
             font-weight: 700;
             margin: 0;
             line-height: 1.2;
@@ -115,12 +116,12 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-top: 2rem;
-            font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+            margin-top: 1.5rem;
+            font-size: clamp(0.7rem, 2.5vw, 0.95rem);
             color: #8b949e;
             text-align: left;
             background: rgba(0, 0, 0, 0.4);
-            padding: 1.5rem;
+            padding: 1.2rem;
             border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -171,7 +172,7 @@
             align-items: center;
             z-index: 20;
             background: rgba(13, 17, 23, 0.95);
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             border: 1px solid rgba(88, 166, 255, 0.4);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 
@@ -180,6 +181,7 @@
             opacity: 0;
             transform: scale(0.95);
             transition: opacity 0.3s ease, transform 0.3s ease;
+            max-height: 95vh;
         }
 
         #tetris-wrapper.visible {
@@ -188,27 +190,79 @@
             transform: scale(1);
         }
 
+        /* Escalado responsivo del canvas para móviles pequeños */
         #tetris {
             background: #000;
             border: 2px solid #30363d;
             border-radius: 4px;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            max-height: 50vh;
+            width: auto;
         }
+
+        .tetris-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .tetris-title { margin: 0; font-size: 1.2rem; }
+        .tetris-score { font-size: 1rem; }
 
         .tetris-controls {
-            margin-top: 15px;
+            margin-top: 10px;
             color: #8b949e;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-align: center;
         }
 
-        /* --- PIE DE PÁGINA (DERECHOS DE AUTOR) --- */
+        /* --- CONTROLES MÓVILES --- */
+        .mobile-controls {
+            display: none; /* Oculto por defecto (escritorio) */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .m-btn {
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid rgba(88, 166, 255, 0.4);
+            color: var(--primary-cyan);
+            font-size: 1.2rem;
+            padding: 12px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .m-btn:active {
+            background: rgba(88, 166, 255, 0.3);
+            transform: scale(0.95);
+        }
+
+        /* Mostramos los controles en pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .mobile-controls { display: grid; }
+            .tetris-controls { display: none; } /* Ocultamos el texto de instrucciones de teclado */
+            #tetris { max-height: 45vh; }
+        }
+
+        /* --- PIE DE PÁGINA --- */
         .copyright {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             width: 100%;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: rgba(139, 148, 158, 0.6); 
             z-index: 10;
             letter-spacing: 0.05em;
@@ -219,7 +273,6 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(-50%); }
         }
-
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -274,11 +327,23 @@
     </main>
 
     <div id="tetris-wrapper">
-        <h2 style="margin: 0 0 10px 0; font-size: 1.5rem;">TETRIS</h2>
+        <div class="tetris-header">
+            <h2 class="tetris-title">TETRIS</h2>
+            <div class="tetris-score">Pts: <span id="score" style="color: #7ee787; font-weight: bold;">0</span></div>
+        </div>
+        
         <canvas id="tetris" width="240" height="400"></canvas>
-        <div style="margin-top: 15px; font-size: 1.2rem;">Puntuación: <span id="score" style="color: #7ee787;">0</span></div>
+        
         <div class="tetris-controls">Usa las flechas del teclado para jugar (↑ para rotar)</div>
-        <button id="btn-close-tetris" class="btn-action" style="margin-top: 15px; color: var(--keyword-color); border-color: var(--keyword-color);">Terminar Proceso</button>
+        
+        <div class="mobile-controls">
+            <div class="m-btn" id="btn-left">◀</div>
+            <div class="m-btn" id="btn-rotate" style="background: rgba(188, 140, 255, 0.1); border-color: rgba(188, 140, 255, 0.4); color: var(--secondary-purple);">↻</div>
+            <div class="m-btn" id="btn-right">▶</div>
+            <div></div> <div class="m-btn" id="btn-down" style="grid-column: 2;">▼</div>
+        </div>
+
+        <button id="btn-close-tetris" class="btn-action" style="margin-top: 15px; color: var(--keyword-color); border-color: var(--keyword-color); width: 100%;">Terminar Proceso</button>
     </div>
 
     <footer class="copyright">
@@ -286,7 +351,7 @@
     </footer>
 
     <script>
-        // Clonar el texto del fondo para el scroll infinito
+        // Clonar el texto del fondo
         const codeContent = document.getElementById('code-content');
         codeContent.innerHTML += '<br><br>' + codeContent.innerHTML + '<br><br>' + codeContent.innerHTML;
 
@@ -320,7 +385,7 @@
         // --- LÓGICA DE TETRIS ---
         const canvas = document.getElementById('tetris');
         const context = canvas.getContext('2d');
-        context.scale(20, 20); // 240/20 = 12 columnas, 400/20 = 20 filas
+        context.scale(20, 20); 
 
         function arenaSweep() {
             let rowCount = 1;
@@ -376,7 +441,6 @@
                     if (value !== 0) {
                         context.fillStyle = colors[value];
                         context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                        // Añadir un borde sutil a las piezas
                         context.lineWidth = 0.05;
                         context.strokeStyle = '#000';
                         context.strokeRect(x + offset.x, y + offset.y, 1, 1);
@@ -467,11 +531,9 @@
 
         function update(time = 0) {
             if (!tetrisWrapper.classList.contains('visible')) {
-                // Pausar el juego si no está visible
                 requestAnimationFrame(update);
                 return;
             }
-
             const deltaTime = time - lastTime;
             lastTime = time;
             dropCounter += deltaTime;
@@ -486,39 +548,37 @@
             document.getElementById('score').innerText = player.score;
         }
 
-        // Colores adaptados a la paleta de tu sitio
         const colors = [
-            null,
-            '#58a6ff', // Cyan
-            '#bc8cff', // Morado
-            '#ff7b72', // Rojo/Coral
-            '#7ee787', // Verde
-            '#ffbd2e', // Amarillo
-            '#a5d6ff', // Azul claro
-            '#d2a8ff'  // Lila
+            null, '#58a6ff', '#bc8cff', '#ff7b72', '#7ee787', '#ffbd2e', '#a5d6ff', '#d2a8ff'
         ];
 
         const arena = createMatrix(12, 20);
+        const player = { pos: {x: 0, y: 0}, matrix: null, score: 0 };
 
-        const player = {
-            pos: {x: 0, y: 0},
-            matrix: null,
-            score: 0,
-        };
-
+        // --- EVENTOS TECLADO ---
         document.addEventListener('keydown', event => {
             if (!tetrisWrapper.classList.contains('visible')) return;
-            
-            if (event.keyCode === 37) { // Izquierda
-                playerMove(-1);
-            } else if (event.keyCode === 39) { // Derecha
-                playerMove(1);
-            } else if (event.keyCode === 40) { // Abajo
-                playerDrop();
-            } else if (event.keyCode === 38) { // Arriba (Rotar)
-                playerRotate(1);
-            }
+            if (event.keyCode === 37) playerMove(-1);
+            else if (event.keyCode === 39) playerMove(1);
+            else if (event.keyCode === 40) playerDrop();
+            else if (event.keyCode === 38) playerRotate(1);
         });
+
+        // --- EVENTOS TÁCTILES / MOUSE PARA BOTONES MÓVILES ---
+        const bindControl = (id, action) => {
+            const btn = document.getElementById(id);
+            const handler = (e) => {
+                e.preventDefault(); 
+                if (tetrisWrapper.classList.contains('visible')) action();
+            };
+            btn.addEventListener('touchstart', handler, {passive: false});
+            btn.addEventListener('mousedown', handler);
+        };
+
+        bindControl('btn-left', () => playerMove(-1));
+        bindControl('btn-right', () => playerMove(1));
+        bindControl('btn-down', () => playerDrop());
+        bindControl('btn-rotate', () => playerRotate(1));
 
     </script>
 </body>
