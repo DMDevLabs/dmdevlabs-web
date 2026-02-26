@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DMDev Labs | Inicializando Sistema</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -28,10 +28,10 @@
             align-items: center;
             color: var(--primary-cyan);
             position: relative;
-            touch-action: none; 
+            touch-action: none; /* Evita zoom y scroll en móviles */
         }
 
-        /* --- EFECTO CRT (LÍNEAS DE ESCANEO) --- */
+        /* --- EFECTO CRT --- */
         body::after {
             content: " ";
             display: block;
@@ -124,7 +124,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
-            position: relative;
         }
 
         .terminal-text {
@@ -147,7 +146,6 @@
             animation: fadeInTerminal 0.1s forwards;
         }
         
-        /* Animación secuencial de la terminal */
         .line-1 { animation-delay: 0.5s; }
         .line-2 { animation-delay: 1.5s; }
         .line-3 { animation-delay: 2.5s; }
@@ -187,8 +185,6 @@
             background: rgba(88, 166, 255, 0.05);
             cursor: pointer;
             font-family: 'Fira Code', monospace;
-            position: relative;
-            overflow: hidden;
         }
 
         .action-links a:hover, .btn-action:hover {
@@ -204,7 +200,7 @@
             align-items: center;
             z-index: 20;
             background: rgba(13, 17, 23, 0.95);
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             border: 1px solid rgba(88, 166, 255, 0.4);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 
@@ -226,7 +222,7 @@
         #game-over-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(13, 17, 23, 0.9);
+            background: rgba(13, 17, 23, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -249,31 +245,46 @@
             margin-bottom: 5px;
         }
 
+        .tetris-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(88, 166, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .tetris-title { margin: 0; font-size: 1.2rem; }
+        .tetris-stats { font-size: 0.85rem; margin-top: 4px;}
+        .tetris-stats span { color: #7ee787; font-weight: bold; font-size: 1rem;}
+
+        /* Botón de cerrar reubicado arriba */
+        .close-btn {
+            padding: 6px 12px !important;
+            font-size: 0.8rem !important;
+            color: var(--keyword-color) !important;
+            border-color: var(--keyword-color) !important;
+            margin-top: 0;
+        }
+
         #tetris {
             background: #000;
             border: 2px solid #30363d;
             border-radius: 4px;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
-            max-height: 50vh;
+            max-height: 55vh;
             width: auto;
         }
 
-        .tetris-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(88, 166, 255, 0.2);
-            padding-bottom: 5px;
-        }
-
-        .tetris-title { margin: 0; font-size: 1.2rem; }
-        .tetris-stats { text-align: right; font-size: 0.85rem; }
-        .tetris-stats span { color: #7ee787; font-weight: bold; font-size: 1rem;}
-
         .tetris-controls {
-            margin-top: 10px;
+            margin-top: 15px;
             color: #8b949e;
             font-size: 0.75rem;
             text-align: center;
@@ -283,23 +294,22 @@
         .mobile-controls {
             display: none; 
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
             width: 100%;
-            max-width: 250px;
+            max-width: 300px;
         }
 
         .m-btn {
             background: rgba(88, 166, 255, 0.1);
             border: 1px solid rgba(88, 166, 255, 0.4);
             color: var(--primary-cyan);
-            font-size: 1.2rem;
-            padding: 12px 0;
+            font-size: 1.5rem; /* Más grandes */
+            padding: 16px 0; /* Más altos para fácil pulsación */
             border-radius: 6px;
             cursor: pointer;
             user-select: none;
             touch-action: manipulation;
-            font-family: monospace;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -308,12 +318,6 @@
         .m-btn:active {
             background: rgba(88, 166, 255, 0.3);
             transform: scale(0.95);
-        }
-
-        @media (max-width: 768px) {
-            .mobile-controls { display: grid; }
-            .tetris-controls { display: none; } 
-            #tetris { max-height: 42vh; }
         }
 
         /* --- PIE DE PÁGINA --- */
@@ -325,26 +329,45 @@
             font-size: 0.7rem;
             color: rgba(139, 148, 158, 0.6); 
             z-index: 10;
-            letter-spacing: 0.05em;
+        }
+
+        /* --- MEDIA QUERIES PARA ADAPTACIÓN MÓVIL EXACTA --- */
+        @media (max-width: 768px) {
+            #tetris-wrapper {
+                /* Forzamos a que ocupe todo el espacio de la pantalla */
+                position: fixed;
+                top: 0; left: 0;
+                width: 100vw;
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+                border: none;
+                padding: 20px 15px 40px 15px;
+                justify-content: space-between; /* Distribuye el espacio sobrante */
+            }
+            
+            #tetris { 
+                /* Se adapta dinámicamente al espacio sobrante */
+                max-height: calc(100dvh - 240px); 
+            }
+
+            .mobile-controls { 
+                display: grid; 
+                margin-bottom: 10px;
+            }
+            .tetris-controls { display: none; } 
+        }
+
+        /* Oculta el copyright si el tetris está activo en móvil para evitar que se pise con los botones */
+        body.playing-tetris .copyright {
+            display: none;
         }
 
         /* --- ANIMACIONES --- */
-        @keyframes scroll-up {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        @keyframes fadeInTerminal {
-            to { opacity: 1; }
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(88, 166, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); }
-        }
+        @keyframes scroll-up { 100% { transform: translateY(-50%); } }
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes fadeInTerminal { to { opacity: 1; } }
+        @keyframes pulse { 70% { box-shadow: 0 0 0 6px rgba(88, 166, 255, 0); } }
     </style>
 </head>
 <body>
@@ -389,7 +412,7 @@
         </div>
 
         <div class="action-links">
-            <a id="btn-open-tetris">Iniciar TETRIS</a>
+            <a id="btn-open-tetris">Iniciar SYS.TETRIS</a>
             <a href="mailto:contacto@dmdevlabs.com">Contacto DMDev</a>
         </div>
     </main>
@@ -402,11 +425,14 @@
         </div>
 
         <div class="tetris-header">
-            <h2 class="tetris-title">TETRIS</h2>
-            <div class="tetris-stats">
-                Nivel: <span id="level" style="color: var(--secondary-purple);">1</span><br>
-                Pts: <span id="score">0</span>
+            <div class="header-info">
+                <h2 class="tetris-title">SYS.TETRIS</h2>
+                <div class="tetris-stats">
+                    Nivel: <span id="level" style="color: var(--secondary-purple);">1</span> | 
+                    Pts: <span id="score">0</span>
+                </div>
             </div>
+            <button id="btn-close-tetris" class="btn-action close-btn">Cerrar [X]</button>
         </div>
         
         <canvas id="tetris" width="240" height="400"></canvas>
@@ -420,8 +446,6 @@
             <div class="m-btn" id="btn-hard-drop" style="background: rgba(126, 231, 135, 0.1); border-color: rgba(126, 231, 135, 0.4); color: #7ee787;">⏬</div> 
             <div class="m-btn" id="btn-down" style="grid-column: 2;">▼</div>
         </div>
-
-        <button id="btn-close-tetris" class="btn-action" style="margin-top: 15px; color: var(--keyword-color); border-color: var(--keyword-color); width: 100%;">Terminar Proceso</button>
     </div>
 
     <footer class="copyright">
@@ -429,11 +453,9 @@
     </footer>
 
     <script>
-        // Clonar el texto del fondo
         const codeContent = document.getElementById('code-content');
         codeContent.innerHTML += '<br><br>' + codeContent.innerHTML + '<br><br>' + codeContent.innerHTML;
 
-        // --- LÓGICA DE INTERFAZ ---
         const mainUI = document.getElementById('main-ui');
         const tetrisWrapper = document.getElementById('tetris-wrapper');
         const btnOpenTetris = document.getElementById('btn-open-tetris');
@@ -446,6 +468,7 @@
 
         btnOpenTetris.addEventListener('click', () => {
             mainUI.classList.add('hidden');
+            document.body.classList.add('playing-tetris'); // Oculta el footer en móvil
             setTimeout(() => {
                 tetrisWrapper.classList.add('visible');
                 if (!gameStarted) {
@@ -459,6 +482,7 @@
 
         const closeGame = () => {
             tetrisWrapper.classList.remove('visible');
+            document.body.classList.remove('playing-tetris');
             setTimeout(() => {
                 mainUI.classList.remove('hidden');
             }, 300);
@@ -477,7 +501,6 @@
             update();
         });
 
-        // --- LÓGICA DE TETRIS ---
         const canvas = document.getElementById('tetris');
         const context = canvas.getContext('2d');
         context.scale(20, 20); 
@@ -486,9 +509,7 @@
             let rowCount = 1;
             outer: for (let y = arena.length - 1; y > 0; --y) {
                 for (let x = 0; x < arena[y].length; ++x) {
-                    if (arena[y][x] === 0) {
-                        continue outer;
-                    }
+                    if (arena[y][x] === 0) continue outer;
                 }
                 const row = arena.splice(y, 1)[0].fill(0);
                 arena.unshift(row);
@@ -503,8 +524,7 @@
             const o = player.pos;
             for (let y = 0; y < m.length; ++y) {
                 for (let x = 0; x < m[y].length; ++x) {
-                    if (m[y][x] !== 0 &&
-                       (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+                    if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                         return true;
                     }
                 }
@@ -514,9 +534,7 @@
 
         function createMatrix(w, h) {
             const matrix = [];
-            while (h--) {
-                matrix.push(new Array(w).fill(0));
-            }
+            while (h--) matrix.push(new Array(w).fill(0));
             return matrix;
         }
 
@@ -554,9 +572,7 @@
         function merge(arena, player) {
             player.matrix.forEach((row, y) => {
                 row.forEach((value, x) => {
-                    if (value !== 0) {
-                        arena[y + player.pos.y][x + player.pos.x] = value;
-                    }
+                    if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
                 });
             });
         }
@@ -574,9 +590,7 @@
         }
 
         function playerHardDrop() {
-            while (!collide(arena, player)) {
-                player.pos.y++;
-            }
+            while (!collide(arena, player)) player.pos.y++;
             player.pos.y--;
             merge(arena, player);
             playerReset();
@@ -587,9 +601,7 @@
 
         function playerMove(offset) {
             player.pos.x += offset;
-            if (collide(arena, player)) {
-                player.pos.x -= offset;
-            }
+            if (collide(arena, player)) player.pos.x -= offset;
         }
 
         function playerReset() {
@@ -639,50 +651,37 @@
                 return;
             }
             
-            // Dificultad progresiva
             let dropInterval = Math.max(100, 1000 - (player.level * 80));
 
             const deltaTime = time - lastTime;
             lastTime = time;
             dropCounter += deltaTime;
-            if (dropCounter > dropInterval) {
-                playerDrop();
-            }
+            if (dropCounter > dropInterval) playerDrop();
+            
             draw();
             requestAnimationFrame(update);
         }
 
         function updateScore() {
             document.getElementById('score').innerText = player.score;
-            // Subir de nivel cada 50 puntos
             player.level = Math.floor(player.score / 50) + 1;
             document.getElementById('level').innerText = player.level;
         }
 
-        const colors = [
-            null, '#58a6ff', '#bc8cff', '#ff7b72', '#7ee787', '#ffbd2e', '#a5d6ff', '#d2a8ff'
-        ];
-
+        const colors = [ null, '#58a6ff', '#bc8cff', '#ff7b72', '#7ee787', '#ffbd2e', '#a5d6ff', '#d2a8ff' ];
         const arena = createMatrix(12, 20);
         const player = { pos: {x: 0, y: 0}, matrix: null, score: 0, level: 1 };
 
-        // --- EVENTOS TECLADO ---
         document.addEventListener('keydown', event => {
             if (!tetrisWrapper.classList.contains('visible') || isGameOver) return;
-            
-            // Prevenir el scroll de la página al jugar con flechas o espacio
-            if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
-                event.preventDefault();
-            }
-
+            if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) event.preventDefault();
             if (event.keyCode === 37) playerMove(-1);
             else if (event.keyCode === 39) playerMove(1);
             else if (event.keyCode === 40) playerDrop();
             else if (event.keyCode === 38) playerRotate(1);
-            else if (event.keyCode === 32) playerHardDrop(); // Espacio
+            else if (event.keyCode === 32) playerHardDrop();
         });
 
-        // --- EVENTOS TÁCTILES / MOUSE PARA BOTONES MÓVILES ---
         const bindControl = (id, action) => {
             const btn = document.getElementById(id);
             const handler = (e) => {
